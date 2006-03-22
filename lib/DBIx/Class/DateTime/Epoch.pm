@@ -3,9 +3,94 @@ package DBIx::Class::DateTime::Epoch;
 use strict;
 use warnings;
 
+our $VERSION = '0.01';
+
 use base qw( DBIx::Class );
 
 use DateTime;
+
+=head1 NAME
+
+DBIx::Class::DateTime::Epoch - Automatic inflation/deflation of epoch-based DateTime objects for DBIx::Class
+
+=head1 SYNOPSIS
+
+    package foo;
+    
+    use base qw( DBIx::Class );
+    
+    __PACKAGE__->load_components( qw( DateTime::Epoch Core ) );
+    __PACKAGE__->add_columns(
+        name => {
+            data_type => 'varchar',
+            size      => 10
+        },
+        bar => {
+            data_type => 'bigint',
+            datetime  => 'datetime'
+        },
+        creation_time => {
+            data_type => 'bigint',
+            datetime  => 'ctime'
+        },
+        modification_time => {
+            data_type => 'bigint',
+            datetime  => 'mtime'
+        }
+    );
+
+=head1 DESCRIPTION
+
+This module automatically inflates/deflates DateTime objects
+corresponding to applicable columns. Columns may also be
+defined to specify their nature, such as columns representing a
+creation time (set at time of insertion) or a modification time
+(set at time of every update).
+
+=head2 register_column
+
+This method will automatically add inflation and deflation rules
+to a column if a datetime value has been set in the column's definition.
+If the datetime value is 'ctime' (creation time) or 'mtime'
+(modification time), it will be registered as such for later
+use by the insert and the update methods.
+
+=head2 insert
+
+This method will set the value of all registered creation time
+columns to the current time. No changes will be made to a column
+whose value has already been set.
+
+=head2 update
+
+This method will set the value of all registered modification time
+columns to the current time. This will overwrite a column's value,
+even if it has been already set.
+
+=head1 SEE ALSO
+
+=over 4
+
+=item * DateTime
+
+=item * DBIx::Class
+
+=back
+
+=head1 AUTHOR
+
+=item * Brian Cassidy E<lt>bricas@cpan.orgE<gt>
+
+=back
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2006 by Brian Cassidy
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself. 
+
+=cut
 
 __PACKAGE__->mk_classdata( ctime_columns => [ ] );
 __PACKAGE__->mk_classdata( mtime_columns => [ ] );
