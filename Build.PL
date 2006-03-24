@@ -9,7 +9,8 @@ my $build = Module::Build->new(
 	create_readme      => 1,
 	create_makefile_pl => 'traditional',
 	requires           => {
-		'DateTime'     => 0
+		'DateTime'     => 0,
+		'DBIx::Class'  => 0
 	},
 	build_requires     => {
 		'Test::More'   => 0
