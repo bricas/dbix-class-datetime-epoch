@@ -27,15 +27,15 @@ DBIx::Class::DateTime::Epoch - Automatic inflation/deflation of epoch-based Date
         },
         bar => {
             data_type => 'bigint',
-            datetime  => 'datetime'
+            epoch     => 1
         },
         creation_time => {
             data_type => 'bigint',
-            datetime  => 'ctime'
+            epoch     => 'ctime'
         },
         modification_time => {
             data_type => 'bigint',
-            datetime  => 'mtime'
+            epoch     => 'mtime'
         }
     );
 
@@ -47,11 +47,13 @@ defined to specify their nature, such as columns representing a
 creation time (set at time of insertion) or a modification time
 (set at time of every update).
 
+=head1 METHODS
+
 =head2 register_column
 
 This method will automatically add inflation and deflation rules
-to a column if a datetime value has been set in the column's definition.
-If the datetime value is 'ctime' (creation time) or 'mtime'
+to a column if an epoch value has been set in the column's definition.
+If the epoch value is 'ctime' (creation time) or 'mtime'
 (modification time), it will be registered as such for later
 use by the insert and the update methods.
 
@@ -99,7 +101,7 @@ sub register_column {
     my( $class, $col, $info ) = @_;
     $class->next::method( $col, $info );
     
-    if( my $type = $info->{ datetime } ) {
+    if( my $type = $info->{ epoch } ) {
         $class->ctime_columns( [ @{ $class->ctime_columns }, $col ] ) if $type eq 'ctime';
         $class->mtime_columns( [ @{ $class->mtime_columns }, $col ] ) if $type eq 'mtime';
         
