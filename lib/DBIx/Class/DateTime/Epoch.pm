@@ -81,6 +81,8 @@ even if it has been already set.
 
 =head1 AUTHOR
 
+=over 4
+
 =item * Brian Cassidy E<lt>bricas@cpan.orgE<gt>
 
 =back
