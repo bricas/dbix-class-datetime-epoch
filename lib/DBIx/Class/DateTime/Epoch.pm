@@ -3,7 +3,7 @@ package DBIx::Class::DateTime::Epoch;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use base qw( DBIx::Class );
 
@@ -84,6 +84,8 @@ even if it has been already set.
 =over 4
 
 =item * Brian Cassidy E<lt>bricas@cpan.orgE<gt>
+
+=item * Adam Paynter E<lt>adapay@cpan.orgE<gt>
 
 =back
 

@@ -1,4 +1,7 @@
 Revision history for Perl extension DBIx::Class::DateTime::Epoch.
 
+0.02  Mon Jul 17 2006
+    - Re-release onto CPAN
+    
 0.01  Wed Mar 22 2006
 	- original version;
