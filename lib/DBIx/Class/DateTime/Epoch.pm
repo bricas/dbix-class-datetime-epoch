@@ -3,7 +3,7 @@ package DBIx::Class::DateTime::Epoch;
 use strict;
 use warnings;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use base qw( DBIx::Class );
 
@@ -131,10 +131,12 @@ sub insert {
 }
 
 sub update {
-    my $self = shift;
-    my $time = time;
-    
+    my $self  = shift;
+    my $time  = time;
+    my %dirty = $self->get_dirty_columns;
+
     for my $column ( @{ $self->mtime_columns } ) {
+        next if exists $dirty{ $column };
         $self->set_column( $column => $time );
     }
     
