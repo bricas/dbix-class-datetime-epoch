@@ -3,7 +3,7 @@ package DBIx::Class::DateTime::Epoch;
 use strict;
 use warnings;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use base qw( DBIx::Class );
 
@@ -79,36 +79,34 @@ even if it has been already set.
 
 =back
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-=over 4
+Brian Cassidy E<lt>bricas@cpan.orgE<gt>
 
-=item * Brian Cassidy E<lt>bricas@cpan.orgE<gt>
-
-=item * Adam Paynter E<lt>adapay@cpan.orgE<gt>
-
-=back
+Adam Paynter E<lt>adapay@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006 by Brian Cassidy
+Copyright 2007 by Brian Cassidy
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
 
 =cut
 
-__PACKAGE__->mk_classdata( ctime_columns => [ ] );
-__PACKAGE__->mk_classdata( mtime_columns => [ ] );
+__PACKAGE__->mk_classdata( ctime_columns => [] );
+__PACKAGE__->mk_classdata( mtime_columns => [] );
 
 sub register_column {
-    my( $class, $col, $info ) = @_;
+    my ( $class, $col, $info ) = @_;
     $class->next::method( $col, $info );
-    
-    if( my $type = $info->{ epoch } ) {
-        $class->ctime_columns( [ @{ $class->ctime_columns }, $col ] ) if $type eq 'ctime';
-        $class->mtime_columns( [ @{ $class->mtime_columns }, $col ] ) if $type eq 'mtime';
-        
+
+    if ( my $type = $info->{ epoch } ) {
+        $class->ctime_columns( [ @{ $class->ctime_columns }, $col ] )
+            if $type eq 'ctime';
+        $class->mtime_columns( [ @{ $class->mtime_columns }, $col ] )
+            if $type eq 'mtime';
+
         $class->inflate_column(
             $col => {
                 inflate => sub { DateTime->from_epoch( epoch => shift ) },
@@ -121,7 +119,7 @@ sub register_column {
 sub insert {
     my $self = shift;
     my $time = time;
-    
+
     for my $column ( @{ $self->ctime_columns }, @{ $self->mtime_columns } ) {
         next if defined $self->get_column( $column );
         $self->store_column( $column => $time );
@@ -139,7 +137,7 @@ sub update {
         next if exists $dirty{ $column };
         $self->set_column( $column => $time );
     }
-    
+
     $self->next::method( @_ );
 }
 

@@ -1,5 +1,8 @@
 Revision history for Perl extension DBIx::Class::DateTime::Epoch.
 
+0.04  Tue Oct 30 2007
+    - switch to Module::Install
+
 0.03  Wed Apr 25 2007
     - don't override user-supplied values for update()
 
