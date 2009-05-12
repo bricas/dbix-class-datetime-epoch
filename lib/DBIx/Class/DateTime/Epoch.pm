@@ -9,73 +9,107 @@ use base qw( DBIx::Class );
 
 use DateTime;
 
+__PACKAGE__->load_components( qw/InflateColumn::DateTime/ );
+
+sub _inflate_to_datetime {
+    my( $self, $value, $info, @rest ) = @_;
+    $self->next::method( $value, $info, @rest )
+        unless $info->{ data_type } =~ m{int} || $info->{ inflate_datetime } eq 'epoch';
+
+    return DateTime->from_epoch( epoch => $value );
+}
+
+sub _deflate_from_datetime {
+    my( $self, $value, $info, @rest ) = @_;
+    $self->next::method( $value, $info, @rest )
+        unless $info->{ data_type } =~ m{int} || $info->{ inflate_datetime } eq 'epoch';
+
+    return $value->epoch;
+}
+
+1;
+
+__END__
+
 =head1 NAME
 
-DBIx::Class::DateTime::Epoch - Automatic inflation/deflation of epoch-based DateTime objects for DBIx::Class
+DBIx::Class::DateTime::Epoch - Automatic inflation/deflation of epoch-based columns to/from DateTime objects
 
 =head1 SYNOPSIS
 
-    package foo;
+    package MySchema::Foo;
     
     use base qw( DBIx::Class );
     
-    __PACKAGE__->load_components( qw( DateTime::Epoch Core ) );
+    __PACKAGE__->load_components( qw( DateTime::Epoch TimeStamp Core ) );
     __PACKAGE__->add_columns(
         name => {
             data_type => 'varchar',
-            size      => 10
+            size      => 10,
         },
-        bar => {
-            data_type => 'bigint',
-            epoch     => 1
+        bar => { # epoch stored as an int
+            data_type        => 'bigint',
+            inflate_datetime => 1,
         },
+        baz => { # epoch stored as a string
+            data_type        => 'varchar',
+            size             => 50,
+            inflate_datetime => 'epoch',
+        },
+        # working in conjunction with DBIx::Class::TimeStamp
         creation_time => {
-            data_type => 'bigint',
-            epoch     => 'ctime'
+            data_type        => 'bigint',
+            inflate_datetime => 1,
+            set_on_create    => 1,
         },
         modification_time => {
-            data_type => 'bigint',
-            epoch     => 'mtime'
+            data_type        => 'bigint',
+            inflate_datetime => 1,
+            set_on_create    => 1,
+            set_on_update    => 1,
         }
     );
 
 =head1 DESCRIPTION
 
-This module automatically inflates/deflates DateTime objects
-corresponding to applicable columns. Columns may also be
-defined to specify their nature, such as columns representing a
-creation time (set at time of insertion) or a modification time
-(set at time of every update).
+This module automatically inflates/deflates DateTime objects from/to epoch
+values for the specified columns. This module is essentially an extension to
+L<DBIx::Class::InflateColumn::DateTime> so all of the settings, including
+C<locale> and C<timezone>, are also valid.
+
+A column will be recognized as an epoch time given one of the following scenarios:
+
+=over 4
+
+=item * C<data_type> is an C<int> of some sort and C<inflate_datetime> is also set to a true value
+
+=item * C<data_type> is some other value (e.g. C<varchar>) and C<inflate_datetime> is explicitly set to C<epoch>.
+
+=back
+
+L<DBIx::Class::TimeStamp> can also be used in conjunction with this module to support
+epoch-based columns that are automatically set on creation of a row and updated subsequent
+modifications.
 
 =head1 METHODS
 
-=head2 register_column
+=head2 _inflate_to_datetime( )
 
-This method will automatically add inflation and deflation rules
-to a column if an epoch value has been set in the column's definition.
-If the epoch value is 'ctime' (creation time) or 'mtime'
-(modification time), it will be registered as such for later
-use by the insert and the update methods.
+Overrides column inflation to use C<Datetime-E<gt>from_epoch>.
 
-=head2 insert
+=head2 _deflate_from_datetime( )
 
-This method will set the value of all registered creation time
-columns to the current time. No changes will be made to a column
-whose value has already been set.
-
-=head2 update
-
-This method will set the value of all registered modification time
-columns to the current time. This will overwrite a column's value,
-even if it has been already set.
+Overrides column deflation to call C<epoch()> on the column value.
 
 =head1 SEE ALSO
 
 =over 4
 
-=item * DateTime
-
 =item * DBIx::Class
+
+=item * DBIx::Class::TimeStamp
+
+=item * DateTime
 
 =back
 
@@ -87,58 +121,10 @@ Adam Paynter E<lt>adapay@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2007 by Brian Cassidy
+Copyright 2006-2009 by Brian Cassidy
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 
 
 =cut
 
-__PACKAGE__->mk_classdata( ctime_columns => [] );
-__PACKAGE__->mk_classdata( mtime_columns => [] );
-
-sub register_column {
-    my ( $class, $col, $info ) = @_;
-    $class->next::method( $col, $info );
-
-    if ( my $type = $info->{ epoch } ) {
-        $class->ctime_columns( [ @{ $class->ctime_columns }, $col ] )
-            if $type eq 'ctime';
-        $class->mtime_columns( [ @{ $class->mtime_columns }, $col ] )
-            if $type eq 'mtime';
-
-        $class->inflate_column(
-            $col => {
-                inflate => sub { DateTime->from_epoch( epoch => shift ) },
-                deflate => sub { shift->epoch }
-            }
-        );
-    }
-}
-
-sub insert {
-    my $self = shift;
-    my $time = time;
-
-    for my $column ( @{ $self->ctime_columns }, @{ $self->mtime_columns } ) {
-        next if defined $self->get_column( $column );
-        $self->store_column( $column => $time );
-    }
-
-    $self->next::method( @_ );
-}
-
-sub update {
-    my $self  = shift;
-    my $time  = time;
-    my %dirty = $self->get_dirty_columns;
-
-    for my $column ( @{ $self->mtime_columns } ) {
-        next if exists $dirty{ $column };
-        $self->set_column( $column => $time );
-    }
-
-    $self->next::method( @_ );
-}
-
-1;
