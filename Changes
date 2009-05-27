@@ -1,11 +1,13 @@
 Revision history for Perl extension DBIx::Class::DateTime::Epoch.
 
-0.04  XXX
-    - switch to Module::Install
-
+0.04  Tue May 26 2009
     [ THINGS THAT WILL BREAK YOUR CODE ]
     - refactor module to itegrate with InflateColumn::DateTime and TimeStamp.
-      Requires DBIx::Class 0.08103. Please read the new documentation.
+      Requires DBIx::Class 0.08103 and DBIx::Class::TimeStamp 0.07.
+      Please read the new documentation.
+
+    [ ENHANCEMENTS ]
+    - switch to Module::Install
 
 0.03  Wed Apr 25 2007
     - don't override user-supplied values for update()
