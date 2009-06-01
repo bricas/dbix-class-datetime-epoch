@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Class::DateTime::Epoch.
 
+0.05  Mon Jun 01 2009
+    [ THING THAT WILL NO LONGER BREAK YOUR CODE ]
+    - added back-compat for the "epoch => 1", etc syntax
+
 0.04  Tue May 26 2009
     [ THINGS THAT WILL BREAK YOUR CODE ]
     - refactor module to itegrate with InflateColumn::DateTime and TimeStamp.

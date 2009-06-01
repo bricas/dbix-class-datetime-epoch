@@ -3,13 +3,30 @@ package DBIx::Class::DateTime::Epoch;
 use strict;
 use warnings;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use base qw( DBIx::Class );
 
 use DateTime;
 
-__PACKAGE__->load_components( qw/InflateColumn::DateTime/ );
+__PACKAGE__->load_components( qw( DynamicDefault InflateColumn::DateTime ) );
+
+# back compat
+sub register_column {
+    my( $class, $col, $info ) = @_;
+
+    if( my $type = delete $info->{ epoch } ) {
+        $info->{ inflate_datetime } = 'epoch';
+
+        if( $type =~ m{^[cm]time$} ) {
+            __PACKAGE__->load_components( 'TimeStamp' );
+            $info->{ dynamic_default_on_create } = 'get_timestamp';
+            $info->{ dynamic_default_on_update } = 'get_timestamp' if $type eq 'mtime';
+        }
+    }
+
+    $class->next::method( $col, $info );
+}
 
 sub _inflate_to_datetime {
     my( $self, $value, $info, @rest ) = @_;
