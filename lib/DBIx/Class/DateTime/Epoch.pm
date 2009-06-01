@@ -9,23 +9,31 @@ use base qw( DBIx::Class );
 
 use DateTime;
 
-__PACKAGE__->load_components( qw( DynamicDefault InflateColumn::DateTime ) );
+__PACKAGE__->load_components( qw( InflateColumn::DateTime ) );
 
 # back compat
-sub register_column {
-    my( $class, $col, $info ) = @_;
+sub add_columns {
+    my( $class, @cols ) = @_;
+    my @columns;
 
-    if( my $type = delete $info->{ epoch } ) {
-        $info->{ inflate_datetime } = 'epoch';
+    while (my $col = shift @cols) {
+        my $info = ref $cols[0] ? shift @cols : {};
 
-        if( $type =~ m{^[cm]time$} ) {
-            __PACKAGE__->load_components( 'TimeStamp' );
-            $info->{ dynamic_default_on_create } = 'get_timestamp';
-            $info->{ dynamic_default_on_update } = 'get_timestamp' if $type eq 'mtime';
+        if( my $type = delete $info->{ epoch } ) {
+            $info->{ inflate_datetime } = 'epoch';
+
+            if( $type =~ m{^[cm]time$} ) {
+                __PACKAGE__->load_components( 'TimeStamp' );
+                $info->{ set_on_create } = 1;
+                $info->{ set_on_update } = 1 if $type eq 'mtime';
+            }
         }
+
+        push @columns, $col => $info;
+
     }
 
-    $class->next::method( $col, $info );
+    $class->next::method( @columns );
 }
 
 sub _inflate_to_datetime {
@@ -109,6 +117,10 @@ epoch-based columns that are automatically set on creation of a row and updated 
 modifications.
 
 =head1 METHODS
+
+=head2 add_columns( )
+
+Provides backwards compatibility with the older DateTime::Epoch API.
 
 =head2 _inflate_to_datetime( )
 
