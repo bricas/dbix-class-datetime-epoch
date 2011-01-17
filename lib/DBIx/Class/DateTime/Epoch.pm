@@ -38,7 +38,7 @@ sub add_columns {
 
 sub _inflate_to_datetime {
     my( $self, $value, $info, @rest ) = @_;
-    $self->next::method( $value, $info, @rest )
+    return $self->next::method( $value, $info, @rest )
         unless $info->{ data_type } =~ m{int}i || $info->{ inflate_datetime } eq 'epoch';
 
     return DateTime->from_epoch( epoch => $value );
@@ -46,7 +46,7 @@ sub _inflate_to_datetime {
 
 sub _deflate_from_datetime {
     my( $self, $value, $info, @rest ) = @_;
-    $self->next::method( $value, $info, @rest )
+    return $self->next::method( $value, $info, @rest )
         unless $info->{ data_type } =~ m{int}i || $info->{ inflate_datetime } eq 'epoch';
 
     return $value->epoch;
