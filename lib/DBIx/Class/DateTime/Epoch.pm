@@ -3,7 +3,7 @@ package DBIx::Class::DateTime::Epoch;
 use strict;
 use warnings;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use base qw( DBIx::Class );
 
@@ -150,7 +150,7 @@ Adam Paynter E<lt>adapay@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2010 by Brian Cassidy
+Copyright 2006-2011 by Brian Cassidy
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

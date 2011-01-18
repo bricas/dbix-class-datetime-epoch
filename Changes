@@ -1,5 +1,9 @@
 Revision history for Perl extension DBIx::Class::DateTime::Epoch.
 
+0.07  Tue Jan 19 2011
+    - fix inflation/deflation routines so that non-epoch datetime columns
+      are handled correctly (woosley)
+
 0.06  Thu Jan 28 2009
     - make sure regex for "int" is case insensitive (RT #54053)
 
