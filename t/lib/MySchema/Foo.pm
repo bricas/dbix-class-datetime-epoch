@@ -38,7 +38,14 @@ __PACKAGE__->add_columns(
         inflate_datetime => 1,
         set_on_create    => 1,
         set_on_update    => 1,
-    }
+    },
+    update_time => {
+        data_type        => 'datetime',
+        set_on_create    => 1,
+        set_on_update    => 1,
+        is_nullable      => 1,
+    },
+
 );
 
 __PACKAGE__->set_primary_key( 'id' );
