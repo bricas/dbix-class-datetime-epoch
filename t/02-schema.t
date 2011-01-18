@@ -40,7 +40,7 @@ my $rs = $schema->resultset( 'Foo' );
         isa_ok( $row->modification_time, 'DateTime' );
         like( $row->get_column( 'creation_time' ), qr/^\d+$/, 'TimeStamp as epoch' );
         like( $row->get_column( 'modification_time' ), qr/^\d+$/, 'TimeStamp as epoch' );
-        like ($row->get_column( 'update_time'), qr/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}$/, 'TimeStamp still Timestamp');
+        like( $row->get_column( 'update_time' ), qr/^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}$/, 'TimeStamp still Timestamp' );
 
         my $mtime = $row->modification_time;
         sleep( 1 );
