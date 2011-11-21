@@ -1,30 +1,34 @@
 Revision history for Perl extension DBIx::Class::DateTime::Epoch.
 
-0.07  Tue Jan 19 2011
-    - fix inflation/deflation routines so that non-epoch datetime columns
-      are handled correctly (woosley)
+0.08 2011-11-21
+ - remove warning in case of datetime column without inflate_datetime
+   (Alexandr Ciornii)
 
-0.06  Thu Jan 28 2009
-    - make sure regex for "int" is case insensitive (RT #54053)
+0.07 2011-01-19
+ - fix inflation/deflation routines so that non-epoch datetime columns are
+   handled correctly (woosley)
 
-0.05  Mon Jun 01 2009
-    [ THING THAT WILL NO LONGER BREAK YOUR CODE ]
-    - added back-compat for the "epoch => 1", etc syntax
+0.06 2009-01-28
+ - make sure regex for "int" is case insensitive (RT #54053)
 
-0.04  Tue May 26 2009
-    [ THINGS THAT WILL BREAK YOUR CODE ]
-    - refactor module to itegrate with InflateColumn::DateTime and TimeStamp.
-      Requires DBIx::Class 0.08103 and DBIx::Class::TimeStamp 0.07.
-      Please read the new documentation.
+0.05 2009-06-01
+ [THING THAT WILL NO LONGER BREAK YOUR CODE]
+ - added back-compat for the "epoch => 1", etc syntax
 
-    [ ENHANCEMENTS ]
-    - switch to Module::Install
+0.04 2009-05-26
+ [ENHANCEMENTS]
+ - switch to Module::Install
 
-0.03  Wed Apr 25 2007
-    - don't override user-supplied values for update()
+ [THINGS THAT WILL BREAK YOUR CODE]
+ - refactor module to itegrate with InflateColumn::DateTime and TimeStamp.
+   Requires DBIx::Class 0.08103 and DBIx::Class::TimeStamp 0.07. Please
+   read the new documentation.
 
-0.02  Mon Jul 17 2006
-    - Re-release onto CPAN
-    
-0.01  Wed Mar 22 2006
-    - original version;
+0.03 2007-04-25
+ - don't override user-supplied values for update()
+
+0.02 2006-07-17
+ - Re-release onto CPAN
+
+0.01 2006-03-22
+ - original version;
