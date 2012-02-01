@@ -1,4 +1,4 @@
-use inc::Module::Install 1.00;
+use inc::Module::Install 1.04;
 
 if( -e 'MANIFEST.SKIP' ) {
     system( 'pod2text lib/DBIx/Class/DateTime/Epoch.pm > README' );
@@ -15,6 +15,7 @@ requires 'DateTime';
 
 test_requires 'Test::More';
 test_requires 'DBICx::TestDatabase';
+test_requires 'DateTime::Format::SQLite';
 
 repository 'http://github.com/bricas/dbix-class-datetime-epoch';
 

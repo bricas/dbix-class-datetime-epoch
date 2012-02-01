@@ -3,7 +3,7 @@ package DBIx::Class::DateTime::Epoch;
 use strict;
 use warnings;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 use base qw( DBIx::Class );
 
@@ -95,6 +95,13 @@ DBIx::Class::DateTime::Epoch - Automatic inflation/deflation of epoch-based colu
         }
     );
 
+=head1 DATETIME::FORMAT DEPENDENCY
+
+There have been no assumptions made as to what RDBMS you will be using. As per 
+the note in the L<DBIx::Class::InflateColumn::DateTime documentation|DBIx::Class::InflateColumn::DateTime/DESCRIPTION>, 
+you will need to install the DateTime::Format::* module that matches your RDBMS 
+of choice.
+
 =head1 DESCRIPTION
 
 This module automatically inflates/deflates DateTime objects from/to epoch
@@ -150,7 +157,7 @@ Adam Paynter E<lt>adapay@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2006-2011 by Brian Cassidy
+Copyright 2006-2012 by Brian Cassidy
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

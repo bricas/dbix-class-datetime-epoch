@@ -1,5 +1,10 @@
 Revision history for Perl extension DBIx::Class::DateTime::Epoch.
 
+0.09 2012-02-01
+ - added a test dependency on DateTime::Format::SQLite (RT #74576)
+ - added some documentation about the installation requirement of an 
+   appropriate DateTime::Format::* module for your RDBMS of choice
+
 0.08 2011-11-21
  - remove warning in case of datetime column without inflate_datetime
    (Alexandr Ciornii)
