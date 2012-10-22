@@ -1,5 +1,8 @@
 Revision history for Perl extension DBIx::Class::DateTime::Epoch.
 
+0.10 2012-10-22
+ - Repackage to fix Module::Install 1.04 issue
+
 0.09 2012-02-01
  - added a test dependency on DateTime::Format::SQLite (RT #74576)
  - added some documentation about the installation requirement of an 

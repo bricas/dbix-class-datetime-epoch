@@ -1,4 +1,4 @@
-use inc::Module::Install 1.04;
+use inc::Module::Install 1.05;
 
 if( -e 'MANIFEST.SKIP' ) {
     system( 'pod2text lib/DBIx/Class/DateTime/Epoch.pm > README' );
