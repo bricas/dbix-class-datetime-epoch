@@ -10,3 +10,5 @@ MANIFEST*
 *~
 *.bak
 *.tar.gz
+# Generated from Makefile.PL with pod2text
+/README
