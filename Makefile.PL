@@ -17,6 +17,6 @@ test_requires 'Test::More';
 test_requires 'DBICx::TestDatabase';
 test_requires 'DateTime::Format::SQLite';
 
-repository 'http://github.com/bricas/dbix-class-datetime-epoch';
+repository 'https://github.com/bricas/dbix-class-datetime-epoch';
 
 WriteAll;
